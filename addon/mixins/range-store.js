@@ -5,10 +5,10 @@ var component;
 component = Ember.Mixin.create({
   fetchedRanges: [],
   isRangeFetched: function(range) {
-    var fetchedRange, _i, _len, _ref;
-    _ref = this.get('fetchedRanges');
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      fetchedRange = _ref[_i];
+    var fetchedRange, i, len, ref;
+    ref = this.get('fetchedRanges');
+    for (i = 0, len = ref.length; i < len; i++) {
+      fetchedRange = ref[i];
       if (range.start.isSame(fetchedRange.start) || range.start.isAfter(fetchedRange.start)) {
         if (range.end.isSame(fetchedRange.end) || range.end.isBefore(fetchedRange.end)) {
           return true;
@@ -20,7 +20,7 @@ component = Ember.Mixin.create({
     return false;
   },
   aggregateRange: function(rangeB) {
-    var fetchedRanges, newRanges, rangeA, rangeBPushed, _i, _len;
+    var fetchedRanges, i, len, newRanges, rangeA, rangeBPushed;
     fetchedRanges = this.get('fetchedRanges');
     if (fetchedRanges.length === 0) {
       this.set('fetchedRanges', [rangeB]);
@@ -31,8 +31,8 @@ component = Ember.Mixin.create({
     });
     newRanges = [];
     rangeBPushed = false;
-    for (_i = 0, _len = fetchedRanges.length; _i < _len; _i++) {
-      rangeA = fetchedRanges[_i];
+    for (i = 0, len = fetchedRanges.length; i < len; i++) {
+      rangeA = fetchedRanges[i];
       if (rangeB.start.isAfter(rangeA.end)) {
         newRanges.push(rangeB);
         continue;
@@ -79,11 +79,11 @@ component = Ember.Mixin.create({
     this.set('fetchedRanges', newRanges);
   },
   debugFetchranges: (function() {
-    var fRange, res, _i, _len, _ref;
+    var fRange, i, len, ref, res;
     res = [];
-    _ref = this.get('fetchedRanges');
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      fRange = _ref[_i];
+    ref = this.get('fetchedRanges');
+    for (i = 0, len = ref.length; i < len; i++) {
+      fRange = ref[i];
       res.push(fRange.start.toString() + ' -> ' + fRange.end.toString());
     }
     return res.join('\n');

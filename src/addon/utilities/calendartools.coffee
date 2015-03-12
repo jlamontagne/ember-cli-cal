@@ -51,7 +51,7 @@ layoutEvents = (events) ->
             laneEvents.push(e) if e.isCompatibleWith(laneEvents)
 
         for de in laneEvents
-            remainingEvents = _.without(remainingEvents, de)
+            remainingEvents = remainingEvents.without(de)
 
         laneEvents.sort(sortFunc)
 
@@ -148,8 +148,8 @@ visualizeLayout = (layout, viewstart, viewend) ->
             evvisiblelength = event.getVisibleLength(viewstart, viewend)
             #console.log('DEBUG:', event.label, evvisiblelength)
             
-            _.times(evdist - lanecursor, echo.apply(@, ' '))
-            _.times(evvisiblelength, echo.apply(@, event.label))
+            echo.apply(@, ' ') for i in [1 .. evdist - lanecursor]
+            echo.apply(@, event.label) for i in [1 .. evvisiblelength]
             lanecursor = evdist + evvisiblelength
             
             #console.log(event.label, evdist, evvisiblelength, event.getVisibleStart(viewstart).toString())

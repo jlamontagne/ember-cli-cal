@@ -66,14 +66,14 @@ component = Ember.Component.extend({
   ).property 'events.@each', 'viewstart', 'viewend'
    */
   rows: (function() {
-    var col, date, layoutsbyweek, rows, weekdates, weeklayout, _i, _j, _len;
+    var col, date, i, j, layoutsbyweek, len, rows, weekdates, weeklayout;
     date = this.get('viewstart').clone();
     layoutsbyweek = CalendarTools.getLayoutsByWeek(this.get('events'), this.get('viewstart').clone(), this.get('viewend').clone());
     rows = [];
-    for (_i = 0, _len = layoutsbyweek.length; _i < _len; _i++) {
-      weeklayout = layoutsbyweek[_i];
+    for (i = 0, len = layoutsbyweek.length; i < len; i++) {
+      weeklayout = layoutsbyweek[i];
       weekdates = [];
-      for (col = _j = 1; _j <= 7; col = ++_j) {
+      for (col = j = 1; j <= 7; col = ++j) {
         weekdates.push(date.clone());
         date.add('1', 'day');
       }

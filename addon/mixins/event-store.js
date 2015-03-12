@@ -6,7 +6,7 @@ var component;
 component = Ember.Mixin.create({
   calendarevents: [],
   mergeEvents: function(occurences) {
-    var calendarevents, filterFunc, filteredOccurences, occurence, _i, _len;
+    var calendarevents, filterFunc, filteredOccurences, i, len, occurence;
     calendarevents = this.get('calendarevents');
     filteredOccurences = [];
     filterFunc = function(item) {
@@ -15,8 +15,8 @@ component = Ember.Mixin.create({
       }
       return item.payload.id === occurence.payload.id && item.start.isSame(occurence.start) && item.end.isSame(occurence.end);
     };
-    for (_i = 0, _len = occurences.length; _i < _len; _i++) {
-      occurence = occurences[_i];
+    for (i = 0, len = occurences.length; i < len; i++) {
+      occurence = occurences[i];
       if (!_.find(calendarevents, filterFunc)) {
         filteredOccurences.push(occurence);
       }

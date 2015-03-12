@@ -11,7 +11,7 @@ import Ember from 'ember';
 var DisplayedEvent, Range, getEventsByWeek, getEventsVisibleInPeriod, getLayoutsByWeek, layoutEvents, lib, splitTimeInWeeks, visualizeLayout;
 
 layoutEvents = function(events) {
-  var de, e, lane, laneEvents, remainingEvents, result, sortFunc, _i, _j, _len, _len1;
+  var de, e, j, k, lane, laneEvents, len, len1, remainingEvents, result, sortFunc;
   if (!(events instanceof Array)) {
     return [];
   }
@@ -53,15 +53,15 @@ layoutEvents = function(events) {
   lane = 0;
   while (remainingEvents.length > 0) {
     laneEvents = [];
-    for (_i = 0, _len = remainingEvents.length; _i < _len; _i++) {
-      e = remainingEvents[_i];
+    for (j = 0, len = remainingEvents.length; j < len; j++) {
+      e = remainingEvents[j];
       if (e.isCompatibleWith(laneEvents)) {
         laneEvents.push(e);
       }
     }
-    for (_j = 0, _len1 = laneEvents.length; _j < _len1; _j++) {
-      de = laneEvents[_j];
-      remainingEvents = _.without(remainingEvents, de);
+    for (k = 0, len1 = laneEvents.length; k < len1; k++) {
+      de = laneEvents[k];
+      remainingEvents = remainingEvents.without(de);
     }
     laneEvents.sort(sortFunc);
     result.push({
@@ -90,10 +90,10 @@ splitTimeInWeeks = function(startMonday, endSunday) {
 };
 
 getEventsVisibleInPeriod = function(events, start, end) {
-  var event, visibleevents, _i, _len;
+  var event, j, len, visibleevents;
   visibleevents = [];
-  for (_i = 0, _len = events.length; _i < _len; _i++) {
-    event = events[_i];
+  for (j = 0, len = events.length; j < len; j++) {
+    event = events[j];
     if (event.isVisible(start, end)) {
       visibleevents.push(event);
     }
@@ -102,11 +102,11 @@ getEventsVisibleInPeriod = function(events, start, end) {
 };
 
 getEventsByWeek = function(events, startMonday, endSunday) {
-  var periodevents, res, week, weeks, _i, _len;
+  var j, len, periodevents, res, week, weeks;
   res = [];
   weeks = splitTimeInWeeks(startMonday.clone(), endSunday.clone());
-  for (_i = 0, _len = weeks.length; _i < _len; _i++) {
-    week = weeks[_i];
+  for (j = 0, len = weeks.length; j < len; j++) {
+    week = weeks[j];
     periodevents = getEventsVisibleInPeriod(events, week['start'], week['end']);
     res.push({
       start: week.start.clone(),
@@ -118,11 +118,11 @@ getEventsByWeek = function(events, startMonday, endSunday) {
 };
 
 getLayoutsByWeek = function(events, startMonday, endSunday) {
-  var eventsbyweek, res, week, _i, _len;
+  var eventsbyweek, j, len, res, week;
   res = [];
   eventsbyweek = getEventsByWeek(events, startMonday, endSunday);
-  for (_i = 0, _len = eventsbyweek.length; _i < _len; _i++) {
-    week = eventsbyweek[_i];
+  for (j = 0, len = eventsbyweek.length; j < len; j++) {
+    week = eventsbyweek[j];
     res.push({
       start: week.start.clone(),
       end: week.end.clone(),
@@ -139,7 +139,7 @@ getLayoutsByWeek = function(events, startMonday, endSunday) {
  */
 
 visualizeLayout = function(layout, viewstart, viewend) {
-  var distance, echo, evdist, event, evvisiblelength, lane, lanecursor, result, zero, _i, _j, _len, _len1, _ref;
+  var distance, echo, evdist, event, evvisiblelength, i, j, k, l, lane, lanecursor, len, len1, m, ref, ref1, ref2, result, zero;
   result = '';
   zero = function() {
     return viewstart.clone();
@@ -155,17 +155,21 @@ visualizeLayout = function(layout, viewstart, viewend) {
   }
   echo('\n');
   echo('   |1234567|' + '\n');
-  for (_i = 0, _len = layout.length; _i < _len; _i++) {
-    lane = layout[_i];
+  for (j = 0, len = layout.length; j < len; j++) {
+    lane = layout[j];
     lanecursor = 0;
     echo(lane.lane + ': |');
-    _ref = lane.events;
-    for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-      event = _ref[_j];
+    ref = lane.events;
+    for (k = 0, len1 = ref.length; k < len1; k++) {
+      event = ref[k];
       evdist = distance(event.getVisibleStart(viewstart));
       evvisiblelength = event.getVisibleLength(viewstart, viewend);
-      _.times(evdist - lanecursor, echo.apply(this, ' '));
-      _.times(evvisiblelength, echo.apply(this, event.label));
+      for (i = l = 1, ref1 = evdist - lanecursor; 1 <= ref1 ? l <= ref1 : l >= ref1; i = 1 <= ref1 ? ++l : --l) {
+        echo.apply(this, ' ');
+      }
+      for (i = m = 1, ref2 = evvisiblelength; 1 <= ref2 ? m <= ref2 : m >= ref2; i = 1 <= ref2 ? ++m : --m) {
+        echo.apply(this, event.label);
+      }
       lanecursor = evdist + evvisiblelength;
     }
     echo('\n');
@@ -195,8 +199,8 @@ DisplayedEvent = (function() {
   DisplayedEvent.prototype.hover = false;
 
   function DisplayedEvent(hash) {
-    this.start = moment(hash.start ||  null);
-    this.end = moment(hash.end ||  null);
+    this.start = moment(hash.start || null);
+    this.end = moment(hash.end || null);
     this.label = hash.label || '?';
     this.payload = hash.payload || null;
   }
@@ -249,9 +253,9 @@ DisplayedEvent = (function() {
   };
 
   DisplayedEvent.prototype.isCompatibleWith = function(events) {
-    var event, _i, _len;
-    for (_i = 0, _len = events.length; _i < _len; _i++) {
-      event = events[_i];
+    var event, j, len;
+    for (j = 0, len = events.length; j < len; j++) {
+      event = events[j];
       if (!this.isCompatible(event)) {
         return false;
       }
@@ -288,8 +292,8 @@ Range = (function() {
   Range.prototype.end = null;
 
   function Range(hash) {
-    this.start = moment(hash.start ||  null);
-    this.end = moment(hash.end ||  null);
+    this.start = moment(hash.start || null);
+    this.end = moment(hash.end || null);
   }
 
   return Range;
